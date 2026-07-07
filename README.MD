@@ -138,3 +138,18 @@ The container publishes on **port 8000** — open `http://localhost:8000`.
 *   **Telemetry Logs**: Middleware injecting Correlation IDs and logging transactions in JSON (omitting sensitive customer details).
 *   **Rate Limits**: Per-token endpoint limiter (default 10 requests/minute with a burst of 5; configurable via `RATE_LIMIT_PER_MINUTE` / `RATE_LIMIT_BURST`).
 *   **Frontend UI**: Responsive, premium dark violet design theme providing real-time pipeline visual updates, state explorer drawers, and PDF-restore uploaders.
+
+---
+
+## 4. Roadmap — Planned Future Features
+
+These are deliberately staged enhancements, not gaps: the priority was proving the agentic architecture and the safety spine first, then broadening. Each item is a considered sequencing decision.
+
+- **All home renovation projects** — Reno Compass plans **bathroom remodels only** today; the headline direction is extending the same guided, safety-first pipeline across every home renovation project — kitchens, additions, basements, whole-home.
+- **Multi-domain expansion (the how)** — The pipeline, tier-classification, retention model, and dossier are already domain-agnostic; each new domain needs its own curated, frozen safety matrix (new hazards: gas ranges, high-draw appliance circuits, larger spans), added in lockstep with the data — never ahead of it.
+- **Accounts & identity** — Session recovery today rests on an anonymous token plus portable PDF export; account-based persistence would turn "mostly recoverable" into "always recoverable" and unlock per-user history.
+- **Community reference loop** — An append-only, human-reviewed "suggested-items" store that turns each web-search fallback into a candidate for the curated, frozen knowledge base — growing a validated reference set from real usage.
+- **Live, local pricing** — Cost and rule references are curated and frozen today; county-level live pricing is planned, always surfaced as ranges with a verify-locally disclaimer.
+- **Multi-jurisdiction code lookup** — Coverage centers on a single code framework with explicit local-verification flagging; multi-jurisdiction lookup demands precision work before it can be trusted in a safety domain.
+- **Richer input & output** — Image/vision input (photograph the space instead of measuring) and to-scale design drawings (labeled schematics today).
+- **Export privacy controls** — A redaction option for exported files, as a companion to the accounts-era privacy work.
