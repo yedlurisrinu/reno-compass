@@ -22,6 +22,11 @@ reno_s_*.json
 *.pdf
 *.xlsx
 
+# Generated coverage artifacts (the human-readable summary IS checked in)
+coverage/coverage.xml
+coverage/html/
+.coverage
+
 # IDE configurations
 .vscode/
 .idea/
