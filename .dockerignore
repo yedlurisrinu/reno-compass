@@ -1,0 +1,18 @@
+# Exclude version control and local testing files
+.git
+.pytest_cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+logs/
+tests/
+.env
+pytest.ini
+README.MD
+LICENSE
+docker-compose.yml
+Dockerfile
+
+# Exclude sources folder entirely from the build context
+sources/

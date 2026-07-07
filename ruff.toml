@@ -1,0 +1,29 @@
+# Ruff config for Reno Compass. Run: `ruff check` (lint) and `ruff format` (format).
+target-version = "py312"
+line-length = 100
+
+# `src/` is on PYTHONPATH (see CLAUDE.md), so first-party modules import top-level
+# (`from config.config import ...`). Tell ruff's import sorter they are first-party.
+src = ["src"]
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # isort (import ordering)
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+]
+# E501 (line too long) is reported by the linter but auto-handled by `ruff format`;
+# keep it off the linter so long strings/URLs don't create noise.
+ignore = ["E501"]
+
+[lint.isort]
+known-first-party = ["config", "domain", "data", "agents", "tools"]
+
+[lint.per-file-ignores]
+"tests/*" = ["B011"]  # allow `assert False` in tests
+
+[format]
+quote-style = "double"

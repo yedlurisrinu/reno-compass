@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reno Compass — Intelligent Bathroom Remodel Coordinator</title>
+    <meta name="description" content="AI pair programmer for planning safety-first home bathroom renovations under structural, electrical, and allergen constraints.">
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+
+    <header class="app-header">
+        <div class="header-logo">
+            <span class="logo-icon">▲</span>
+            <div class="logo-text">
+                <h1>Reno Compass</h1>
+                <p class="tagline">From idea to buildable plan — informed, not anxious.</p>
+            </div>
+        </div>
+        
+        <!-- Interactive Stage Progress Tracker -->
+        <nav class="pipeline-progress" id="pipelineProgress">
+            <div class="stage-step active" data-stage="scope" id="step-scope">
+                <div class="step-num">1</div>
+                <div class="step-name">Scope</div>
+            </div>
+            <div class="stage-divider"></div>
+            <div class="stage-step" data-stage="design" id="step-design">
+                <div class="step-num">2</div>
+                <div class="step-name">Design</div>
+            </div>
+            <div class="stage-divider"></div>
+            <div class="stage-step" data-stage="safety_permit" id="step-safety_permit">
+                <div class="step-num">3</div>
+                <div class="step-name">Safety</div>
+            </div>
+            <div class="stage-divider"></div>
+            <div class="stage-step" data-stage="logistics_feasibility" id="step-logistics_feasibility">
+                <div class="step-num">4</div>
+                <div class="step-name">Logistics</div>
+            </div>
+            <div class="stage-divider"></div>
+            <div class="stage-step" data-stage="materials" id="step-materials">
+                <div class="step-num">5</div>
+                <div class="step-name">Materials</div>
+            </div>
+            <div class="stage-divider"></div>
+            <div class="stage-step" data-stage="contractor_validation" id="step-contractor_validation">
+                <div class="step-num">6</div>
+                <div class="step-name">Contractor</div>
+            </div>
+            <div class="stage-divider"></div>
+            <div class="stage-step" data-stage="diy_planning" id="step-diy_planning">
+                <div class="step-num">7</div>
+                <div class="step-name">DIY</div>
+            </div>
+            <div class="stage-divider"></div>
+            <div class="stage-step" data-stage="synthesis" id="step-synthesis">
+                <div class="step-num">8</div>
+                <div class="step-name">Synthesis</div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="app-layout">
+        <!-- Chat Control Area (Left Column) -->
+        <section class="panel chat-panel">
+            <div class="panel-header">
+                <h2>Remodel Conversation</h2>
+                <div class="panel-actions">
+                    <button class="btn btn-secondary btn-sm" id="btnRestorePdf" title="Restore project state from a saved PDF blueprint">
+                        Restore PDF
+                    </button>
+                    <button class="btn btn-success btn-sm" id="btnDownload" style="display: none;">
+                        Download Blueprint Package
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Chat logs -->
+            <div class="chat-history" id="chatHistory"></div>
+
+            <!-- Chat input area -->
+            <div class="chat-input-bar" id="chatInputBar">
+                <textarea id="chatInput" placeholder="Describe your remodel goals, select materials, or upload contractor quotes... (Shift+Enter to send)" rows="2"></textarea>
+                <div class="chat-actions-row">
+                    <button class="btn btn-primary" id="btnSend">Send</button>
+                </div>
+            </div>
+
+            <!-- Terminal end-screen shown once the plan is complete and downloaded -->
+            <div class="session-complete-bar" id="sessionCompleteBar" style="display: none;">
+                <div class="complete-badge">✔ Your renovation plan is complete</div>
+                <p class="complete-sub">Your blueprint package has been downloaded and this session is now closed. Keep the PDF safe — you can reload it anytime with “Restore PDF”.</p>
+                <div class="complete-actions">
+                    <button class="btn btn-secondary" id="btnDownloadAgain">Download Again</button>
+                    <button class="btn btn-primary" id="btnNewProject">Start New Project</button>
+                </div>
+            </div>
+            
+            <!-- Hidden inputs -->
+            <input type="file" id="fileUpload" accept="application/pdf" style="display: none;">
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>Reno Compass Renovation Suite. GCP Vertex AI Grounded.</p>
+    </footer>
+
+    <!-- App Script -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
