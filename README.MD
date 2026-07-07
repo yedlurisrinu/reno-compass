@@ -30,7 +30,7 @@ graph TD
 
 ### Component Architecture
 
-```mermaid1
+```mermaid
 graph LR
     UI["Browser SPA (static/)"] -->|"/api/session, /api/chat"| API["FastAPI backend (src/main.py)"]
     API --> ORCH["Orchestrator — DAG gates & cascade resets (src/orchestrator.py)"]
