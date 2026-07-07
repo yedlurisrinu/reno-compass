@@ -2,12 +2,11 @@ services:
   app:
     build: .
     ports:
-      - "8020:8020"
+      - "8000:8000"
     environment:
-      - PORT=8020
+      - PORT=8000
       - STORAGE_LOCAL_FALLBACK=false
       - MOCK_VERTEX_AI=false
       - PYTHONPATH=src
     volumes:
       - ./static:/app/static
-      - ./sources:/app/sources

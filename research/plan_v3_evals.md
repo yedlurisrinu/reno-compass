@@ -1,5 +1,4 @@
 # Implementation Plan — Live Evaluation & Integration Test Suite
-
 This plan establishes a dedicated Live Eval & Integration Test framework under `tests/evals/` to verify SDK client behaviors, parameter extraction accuracy, and stage auto-advancement transitions against actual model calls.
 
 ---
@@ -8,7 +7,6 @@ This plan establishes a dedicated Live Eval & Integration Test framework under `
 > [!IMPORTANT]
 > * **Live API Credentials**: These tests run with `MOCK_VERTEX_AI=false`. They execute actual model calls (charging token usage and requiring active credentials) and are isolated under `tests/evals/` to be run selectively (e.g., `pytest tests/evals/`).
 > * **Zero-Regression Evals**: We will map out specific eval scenarios to cover the 5 major issues we've encountered so far.
-
 ---
 
 ## Proposed Test Scenarios & Evals

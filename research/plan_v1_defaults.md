@@ -5,9 +5,7 @@ This plan implements:
 2. **Customer Parameter Role Filtering (2A)**: Isolating user messages for stated parameter extraction, separating them from agent explanations.
 3. **Flat Response Payload (3A)**: Removing the `"dossier"` response envelope and flattening payload properties.
 4. **Backend-Driven Auto-Advance (4A)**: Catching the `[APPROVE_STAGE_TRANSITION]` token inline, triggering stage transitions, and launching the next stage coordinator.
-
 ---
-
 ## User Review Required
 > [!IMPORTANT]
 > * **Auto-Advance Token**: The model will append `[APPROVE_STAGE_TRANSITION]` when ready to advance. The server intercepts this, advances the pipeline, and immediately seeds the *next* stage's welcome prompt into the response feed.

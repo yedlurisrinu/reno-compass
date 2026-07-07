@@ -14,7 +14,7 @@ COPY .agents/ ./.agents/
 ENV PYTHONPATH=/app/src
 
 # Expose backend API port
-EXPOSE 8020
+EXPOSE 8000
 
 # Run uvicorn server on startup
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8020"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

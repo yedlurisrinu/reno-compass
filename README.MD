@@ -1,6 +1,12 @@
 # Reno Compass — Intelligent Bathroom Remodel Coordinator
 
-Reno Compass is an agentic renovation planning and safety-verification assistant. It coordinates bathroom remodeling workflows across 8 structured stages—from initial scope elicitation to final blueprint synthesis—by executing a Directed Acyclic Graph (DAG) state machine. 
+## The Problem
+
+A bathroom remodel is one of the most common home projects — and one of the easiest to get wrong. Homeowners plan them with almost no visibility into the things that actually cause trouble: which work legally needs a **licensed professional or a permit**, whether a heavy tub or a moved wall crosses a **structural or electrical** line, what the job will **realistically cost in their ZIP code** (versus the number they hoped for), whether a **contractor's quote quietly omits** half the scope, and which tasks are genuinely **safe to DIY**. The result is budget blowups, failed inspections, unsafe shortcuts, and decisions made without informed consent. Generic chatbots make it worse — they will happily hand out step-by-step instructions for work that should never be attempted without a professional.
+
+## The Solution
+
+Reno Compass is an agentic renovation planning and safety-verification assistant. It coordinates bathroom remodeling workflows across 8 structured stages—from initial scope elicitation to final blueprint synthesis—by executing a Directed Acyclic Graph (DAG) state machine. Every stage is a safety-firewalled AI agent backed by deterministic calculators, so the guidance is calibrated, sourced, and honest about what needs a pro — never a generic chatbot guess.
 
 The system leverages the unified Google GenAI SDK — running against **Google Vertex AI** or **Google AI Studio** (via an API key) — for safety-firewalled AI planning, and Google Cloud Storage (GCS) for transaction checkpoints, integrated alongside deterministic calculators (geometry, lighting targets, and structural/electrical envelopes). Each stage agent's system prompt is composed at runtime from the safety constitution, the always-on behavior rules, its own reasoning-skill manuals and reference tables, and **only its own stage's workflow playbook** — which keeps every agent strictly within its lane.
 
@@ -21,6 +27,30 @@ graph TD
     DIY --> Synthesis[8. Plan Synthesis]
     Synthesis --> Complete((Complete))
 ```
+
+### Component Architecture
+
+```mermaid
+graph LR
+    UI["Browser SPA (static/)"] -->|"/api/session, /api/chat"| API["FastAPI backend (src/main.py)"]
+    API --> ORCH["Orchestrator — DAG gates & cascade resets (src/orchestrator.py)"]
+    API --> AGENTS["Stage Agents (scope … synthesis)"]
+    AGENTS -->|"system prompt = constitution + behavior + skills + stage playbook"| LLM["Google GenAI SDK — Vertex AI / AI Studio (gemini-2.5-flash)"]
+    AGENTS --> TOOLS["Deterministic tools (src/tools/): cost, lighting, envelopes, PDF/XLSX"]
+    ORCH --> DOSSIER[("Dossier — Pydantic v2 shared state")]
+    AGENTS --> DOSSIER
+    DOSSIER -->|checkpoint / restore| GCS[("Google Cloud Storage (local-disk fallback)")]
+```
+
+The browser SPA talks to a FastAPI backend, which hands each turn to the orchestrator (DAG gating) and the active stage agent. Agents reason via the Google GenAI SDK but delegate all arithmetic to deterministic Python tools; the shared Pydantic **dossier** is the single source of truth, checkpointed to GCS between turns.
+
+### Technology Stack
+*   **Backend:** Python 3.12+, FastAPI (`src/main.py`) fronting a DAG orchestrator (`src/orchestrator.py`).
+*   **Agents:** eight stage agents on the unified Google GenAI SDK (Vertex AI or AI Studio, `gemini-2.5-flash`), each firewalled by the safety constitution.
+*   **State:** a single Pydantic v2 dossier passed between stages; checkpointed to Google Cloud Storage with a local-disk fallback for offline development.
+*   **Deterministic tools (`src/tools/`):** cost ballparks, IES lighting targets, structural/electrical envelopes, and PDF/XLSX deliverables — math never touches the LLM.
+*   **Frontend:** a dependency-free vanilla-JS single-page app in `static/`.
+*   **Testing:** pytest (unit + integration) and behave (Gherkin BDD).
 
 ### Core Pipeline Loop Controls
 *   **T1a (Budget Reality check)**: Block progression if stated budget is unrealistic compared to ballpark estimates.
@@ -77,7 +107,7 @@ A container stack is pre-configured for local staging. To spin it up:
 ```bash
 docker compose up --build
 ```
-The container publishes on **port 8020** (not 8000) — open `http://localhost:8020`.
+The container publishes on **port 8000** — open `http://localhost:8000`.
 
 ---
 

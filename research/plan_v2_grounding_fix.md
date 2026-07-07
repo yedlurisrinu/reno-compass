@@ -1,5 +1,4 @@
 # Implementation Plan — Google AI Studio & Vertex AI Tool Schema Bifurcation
-
 This plan resolves the tool declaration mismatch between the legacy Google AI Studio SDK and the Vertex AI gRPC client.
 
 ## User Review Required
@@ -11,12 +10,11 @@ This plan resolves the tool declaration mismatch between the legacy Google AI St
 ---
 
 ## Proposed Changes
-
 ### Backend Agent Layer
 
 #### [MODIFY] [base.py](src/agents/base.py)
 * Update `execute_vertex_call()`:
-  * In the **Google AI Studio** client block, set the grounding tool config to `{"google_search_retrieval": {}}`.
+  * In the **Google AI Studio** client block, set the grounding tool config to `{"google_search_retrieval": {}}`. This is deprecated, replace with latest genai api
   * In the **Vertex AI** (`_execute_vertex_api_call`) client block, set the grounding tool config to `Tool.from_dict({"google_search": {}})` (which we verified successfully builds the new `google_search` schema object).
 
 ---
