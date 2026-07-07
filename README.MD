@@ -2,7 +2,9 @@
 
 Reno Compass is an agentic renovation planning and safety-verification assistant. It coordinates bathroom remodeling workflows across 8 structured stages—from initial scope elicitation to final blueprint synthesis—by executing a Directed Acyclic Graph (DAG) state machine. 
 
-The system leverages the native Google Vertex AI SDK for safety-firewalled AI planning and Google Cloud Storage (GCS) for transaction checkpoints, integrated alongside deterministic calculators (geometry, lighting targets, and structural/electrical envelopes).
+The system leverages the unified Google GenAI SDK — running against **Google Vertex AI** or **Google AI Studio** (via an API key) — for safety-firewalled AI planning, and Google Cloud Storage (GCS) for transaction checkpoints, integrated alongside deterministic calculators (geometry, lighting targets, and structural/electrical envelopes). Each stage agent's system prompt is composed at runtime from the safety constitution, the always-on behavior rules, its own reasoning-skill manuals and reference tables, and **only its own stage's workflow playbook** — which keeps every agent strictly within its lane.
+
+> Scope note: Reno Compass currently plans **bathroom remodels only** (its safety and cost guidance is bathroom-specific); the agent politely declines out-of-scope project types.
 
 ---
 
@@ -33,24 +35,29 @@ graph TD
 
 ### Prerequisites
 *   Python 3.12+
-*   Google Cloud Platform (GCP) credentials for Vertex AI and GCS storage.
+*   Credentials for a live run (resolved in this order): `GEMINI_API_KEY` (Google AI Studio — overrides everything) → Application Default Credentials (`gcloud auth application-default login`) → a service-account JSON in `GOOGLE_APPLICATION_CREDENTIALS_JSON`. `GCP_PROJECT_ID` and `VERTEX_LOCATION` are auto-discovered if unset.
+*   No credentials needed for offline development — set `MOCK_VERTEX_AI=true STORAGE_LOCAL_FALLBACK=true` to run without live LLM calls or GCS.
+
+> Import convention: `src/` is **not** a package — modules import each other as top-level names, so `src` must be on `PYTHONPATH`. This is why the commands below use `PYTHONPATH=src` rather than a `src.`-prefixed import path.
 
 ### Local Installation
-Install the project packages and testing dependencies:
+Install the project packages:
 ```bash
 pip install -r requirements.txt
 ```
 
 ### Running the Verification Suites
-Reno Compass utilizes Gherkin BDD integration tests and pytest unit tests for validation.
+Reno Compass uses pytest unit/integration tests and Gherkin BDD scenarios. `pytest.ini` already sets `pythonpath=src` and `testpaths=tests`, so no path flags are needed:
 
 ```bash
-# Run Gherkin BDD Integration scenarios
-behave tests/features/
+# Unit + integration tests (offline — no live LLM/GCS)
+MOCK_VERTEX_AI=true STORAGE_LOCAL_FALLBACK=true pytest
 
-# Run unit and endpoint integration tests
-PYTHONPATH=. pytest tests/
+# Gherkin BDD integration scenarios
+behave tests/features/
 ```
+
+Tests under `tests/evals/` make real model calls (they run with `MOCK_VERTEX_AI=false`) and require live credentials — run them selectively.
 
 ### Initializing GCS Infrastructure
 To create the session state storage bucket on Google Cloud:
@@ -59,17 +66,18 @@ python scripts/setup_gcs.py
 ```
 
 ### Starting the Server
-Run the FastAPI backend locally:
+Run the FastAPI backend locally (note `PYTHONPATH=src` and the `main:app` target — `src.main:app` will **not** work, see the import convention above):
 ```bash
-uvicorn src.main:app --host 0.0.0.0 --port 8000
+PYTHONPATH=src uvicorn main:app --host 0.0.0.0 --port 8000
 ```
-Open your browser and head to `http://localhost:8000` to interact with the single-page application.
+Open your browser at `http://localhost:8000` to interact with the single-page application.
 
 ### Containerized Deployment
-A container stack is pre-configured with hot-reloading for local staging. To spin it up:
+A container stack is pre-configured for local staging. To spin it up:
 ```bash
 docker compose up --build
 ```
+The container publishes on **port 8020** (not 8000) — open `http://localhost:8020`.
 
 ---
 
@@ -91,12 +99,12 @@ docker compose up --build
 *   **BDD Step Runners**: Integration testing suite matching Gherkin specs via `behave`.
 
 ### Phase 4: Stage Agents & Safety Firewall
-*   **Vertex AI Client**: Base client with system prompt hydration ( constitution, behavior invariants, reasoning skill manuals, and code reference databases ).
+*   **Model Client**: Unified GenAI client (Vertex AI or AI Studio) with system-prompt hydration — safety constitution, behavior invariants, the agent's reasoning-skill manuals and code-reference databases, and its own stage workflow playbook.
 *   **Wrong Tool Recovery**: Automatic auto-retries on model exceptions with exponential backoff.
 *   **Dynamic Scopes**: Filters active dossier context to authorized `reads` and `writes` boundaries (Principle 8).
 *   **Search Grounding**: Vertex grounding configuration to search Google for unvalidated materials.
 
 ### Phase 5: FastAPI Web API & Dark Glassmorphic SPA
 *   **Telemetry Logs**: Middleware injecting Correlation IDs and logging transactions in JSON (omitting sensitive customer details).
-*   **Rate Limits**: Endpoint limiter capping requests at 1 chat request per minute.
+*   **Rate Limits**: Per-token endpoint limiter (default 10 requests/minute with a burst of 5; configurable via `RATE_LIMIT_PER_MINUTE` / `RATE_LIMIT_BURST`).
 *   **Frontend UI**: Responsive, premium dark violet design theme providing real-time pipeline visual updates, state explorer drawers, and PDF-restore uploaders.
