@@ -14,7 +14,7 @@ This plan resolves the tool declaration mismatch between the legacy Google AI St
 
 ### Backend Agent Layer
 
-#### [MODIFY] [base.py](file:///home/yedlurisrinu/0-github/reno-compass/src/agents/base.py)
+#### [MODIFY] [base.py](src/agents/base.py)
 * Update `execute_vertex_call()`:
   * In the **Google AI Studio** client block, set the grounding tool config to `{"google_search_retrieval": {}}`.
   * In the **Vertex AI** (`_execute_vertex_api_call`) client block, set the grounding tool config to `Tool.from_dict({"google_search": {}})` (which we verified successfully builds the new `google_search` schema object).

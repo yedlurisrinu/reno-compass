@@ -19,7 +19,7 @@ This plan implements:
 
 ### 1. Style & HTML Layout
 
-#### [MODIFY] [index.html](file:///home/yedlurisrinu/0-github/reno-compass/static/index.html)
+#### [MODIFY] [index.html](static/index.html)
 * Remove the **Approve & Advance** button from the header panel.
 * Restructure the chat input bar:
   ```html
@@ -31,7 +31,7 @@ This plan implements:
   </div>
   ```
 
-#### [MODIFY] [index.css](file:///home/yedlurisrinu/0-github/reno-compass/static/index.css)
+#### [MODIFY] [index.css](static/index.css)
 * Update `.chat-input-bar` to layout elements vertically (`flex-direction: column`).
 * Style `.chat-actions-row` to align the Send button to the bottom right.
 
@@ -39,7 +39,7 @@ This plan implements:
 
 ### 2. Frontend Interface (UI)
 
-#### [MODIFY] [app.js](file:///home/yedlurisrinu/0-github/reno-compass/static/app.js)
+#### [MODIFY] [app.js](static/app.js)
 * Refactor response handlers to process flat properties (`current_stage`, `conversation`) directly, removing all `data.dossier` accesses.
 * Update button click handler references.
 
@@ -47,16 +47,16 @@ This plan implements:
 
 ### 3. Backend Agent & Pipeline Layer
 
-#### [MODIFY] [behavior.md](file:///home/yedlurisrinu/0-github/reno-compass/.agents/rules/behavior.md)
+#### [MODIFY] [behavior.md](.agents/rules/behavior.md)
 * Append the instruction: *"When all stage requirements are fully resolved and the customer is ready to advance, append the special marker `[APPROVE_STAGE_TRANSITION]` at the very end of your final response text."*
 
-#### [MODIFY] [base.py](file:///home/yedlurisrinu/0-github/reno-compass/src/agents/base.py)
+#### [MODIFY] [base.py](src/agents/base.py)
 * Update `extract_and_update_stage_dossier()`:
   * Filter turns list: `user_text` compiles only turns with `role="user"`. `agent_text` compiles only turns with `role="agent"`.
   * Pass `user_text` to the schema extraction pass for stated parameters (target budgets, zipcodes).
   * Use agent logic or `agent_text` for ballpark estimates.
 
-#### [MODIFY] [main.py](file:///home/yedlurisrinu/0-github/reno-compass/src/main.py)
+#### [MODIFY] [main.py](src/main.py)
 * Update `get_client_safe_state()` to return a flat dict:
   ```python
   return {

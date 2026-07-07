@@ -44,16 +44,16 @@ This plan establishes a dedicated Live Eval & Integration Test framework under `
 
 ## Proposed Changes
 
-### [NEW] [test_tool_compilation.py](file:///home/yedlurisrinu/0-github/reno-compass/tests/evals/test_tool_compilation.py)
+### [NEW] [test_tool_compilation.py](tests/evals/test_tool_compilation.py)
 * Test suite targeting `execute_vertex_call` tools array structures.
 
-### [NEW] [test_extraction_accuracy.py](file:///home/yedlurisrinu/0-github/reno-compass/tests/evals/test_extraction_accuracy.py)
+### [NEW] [test_extraction_accuracy.py](tests/evals/test_extraction_accuracy.py)
 * Test suite for role-filtered extraction passes.
 
-### [NEW] [test_auto_advance_transition.py](file:///home/yedlurisrinu/0-github/reno-compass/tests/evals/test_auto_advance_transition.py)
+### [NEW] [test_auto_advance_transition.py](tests/evals/test_auto_advance_transition.py)
 * Test suite checking regex matches for the transition token and stage state changes.
 
-### [NEW] [test_storage_resiliency.py](file:///home/yedlurisrinu/0-github/reno-compass/tests/evals/test_storage_resiliency.py)
+### [NEW] [test_storage_resiliency.py](tests/evals/test_storage_resiliency.py)
 * Test suite verifying offline local storage fallback.
 
 ---

@@ -7,7 +7,20 @@ __pycache__/
 
 # Local configuration and logs
 .env
+.env.*
 logs/
+
+# Sensitive / personal data — never commit
+research/gcp-details*
+*_credentials*.json
+*-credentials*.json
+service_account*.json
+local_storage/
+
+# Runtime data artifacts (session checkpoints + generated deliverables)
+reno_s_*.json
+*.pdf
+*.xlsx
 
 # IDE configurations
 .vscode/
