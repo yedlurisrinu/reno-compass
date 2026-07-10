@@ -30,6 +30,7 @@ coverage/html/
 # IDE configurations
 .vscode/
 .idea/
+.claude/
 *.suo
 *.ntvs*
 *.njsproj
