@@ -90,7 +90,17 @@ behave tests/features/
 Tests under `tests/evals/` make real model calls (they run with `MOCK_VERTEX_AI=false`) and require live credentials — run them selectively.
 
 ### Initializing GCS Infrastructure
-To create the session state storage bucket on Google Cloud:
+`scripts/setup_gcs.py` creates the session-state checkpoint bucket, so it needs the Google Cloud CLI installed and an authenticated session with a project set first.
+
+**Prerequisite — install & authenticate the gcloud CLI:**
+```bash
+gcloud init                                   # install + initialize the Cloud CLI
+gcloud auth application-default login         # Application Default Credentials
+gcloud config set project <GCP_PROJECT_ID>    # or export GCP_PROJECT_ID
+```
+(This is the ADC step in the `GEMINI_API_KEY` → ADC → service-account JSON auth order from **Prerequisites** above; the project/location are otherwise auto-discovered.)
+
+Then create the bucket:
 ```bash
 python scripts/setup_gcs.py
 ```
