@@ -8,7 +8,7 @@ materials list spreadsheets, both embedded with mandatory disclaimer banners.
 import base64
 import io
 import logging
-from datetime import datetime
+from datetime import UTC, datetime
 
 import openpyxl
 from fpdf import FPDF
@@ -99,7 +99,7 @@ def generate_dossier_pdf(dossier: Dossier) -> str:
     pdf.multi_cell(0, 10, "RENO COMPASS BLUEPRINT PLAN", new_x="LMARGIN", new_y="NEXT")
     pdf.set_font("helvetica", "", 10)
     _line(pdf, f"Dossier ID: {dossier.envelope.dossier_id}")
-    _line(pdf, f"Generated At: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}")
+    _line(pdf, f"Generated At: {datetime.now(UTC).strftime('%Y-%m-%d %H:%M:%S UTC')}")
     _line(pdf, f"Schema Version: {dossier.envelope.schema_version}")
 
     # 1. Summary + chosen design

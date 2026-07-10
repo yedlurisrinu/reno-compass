@@ -1,6 +1,6 @@
 """Unit tests for domain Pydantic dossier models and SemVer checks."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
@@ -65,8 +65,8 @@ def test_dossier_validation_correct():
             "app_id": "reno-compass",
             "schema_version": "1.0.0",
             "dossier_id": "reno_s_test123",
-            "created_at": datetime.utcnow().isoformat(),
-            "last_updated_at": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(UTC).isoformat(),
+            "last_updated_at": datetime.now(UTC).isoformat(),
             "origin": "fresh",
             "current_stage": "scope",
         },

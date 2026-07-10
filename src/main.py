@@ -6,7 +6,7 @@ import logging.config
 import os
 import re
 import secrets
-from datetime import datetime
+from datetime import UTC, datetime
 
 from fastapi import Cookie, FastAPI, File, HTTPException, Response, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
@@ -666,8 +666,8 @@ async def create_new_session(response: Response):
         envelope=DossierEnvelope(
             dossier_id=session_token,
             schema_version="1.0.0",
-            created_at=datetime.utcnow(),
-            last_updated_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
+            last_updated_at=datetime.now(UTC),
             origin="fresh",
             current_stage="scope",
         ),
@@ -803,7 +803,7 @@ async def chat_endpoint(payload: dict, reno_session_token: str | None = Cookie(N
     # Append user turn to conversation history
     if stage_obj and hasattr(stage_obj, "conversation"):
         stage_obj.conversation.append(
-            ConversationTurn(role="user", text=message, at=datetime.utcnow())
+            ConversationTurn(role="user", text=message, at=datetime.now(UTC))
         )
 
     # Record any DIY/Contractor decision BEFORE the agent runs, so the DIY seeding
@@ -822,7 +822,7 @@ async def chat_endpoint(payload: dict, reno_session_token: str | None = Cookie(N
         # Append agent response to conversation history
         if stage_obj and hasattr(stage_obj, "conversation"):
             stage_obj.conversation.append(
-                ConversationTurn(role="agent", text=agent_response, at=datetime.utcnow())
+                ConversationTurn(role="agent", text=agent_response, at=datetime.now(UTC))
             )
 
         # Run structured parameter extraction pass to update dossier fields
@@ -892,14 +892,14 @@ async def chat_endpoint(payload: dict, reno_session_token: str | None = Cookie(N
                     if has_convo:
                         next_stage_obj.conversation.append(
                             ConversationTurn(
-                                role="user", text=next_welcome_user_msg, at=datetime.utcnow()
+                                role="user", text=next_welcome_user_msg, at=datetime.now(UTC)
                             )
                         )
                     next_welcome_response = next_agent.run_chat(next_welcome_user_msg)
                     if has_convo:
                         next_stage_obj.conversation.append(
                             ConversationTurn(
-                                role="agent", text=next_welcome_response, at=datetime.utcnow()
+                                role="agent", text=next_welcome_response, at=datetime.now(UTC)
                             )
                         )
 

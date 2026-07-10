@@ -2,7 +2,7 @@
 
 import base64
 import json
-from datetime import datetime
+from datetime import UTC, datetime
 
 from domain.dossier import Dossier, DossierEnvelope, ProjectBody
 from tools.pdf_xlsx_generator import (
@@ -18,8 +18,8 @@ def _create_mock_dossier() -> Dossier:
         envelope=DossierEnvelope(
             dossier_id="reno_s_doc_test",
             schema_version="1.0.0",
-            created_at=datetime.utcnow(),
-            last_updated_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
+            last_updated_at=datetime.now(UTC),
             origin="fresh",
             current_stage="scope",
         ),

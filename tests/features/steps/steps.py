@@ -1,6 +1,6 @@
 """Behave BDD Gherkin step definitions for Reno Compass pipeline."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 from behave import given, then, when
 
@@ -45,8 +45,8 @@ def _get_minimal_dossier() -> Dossier:
         envelope=DossierEnvelope(
             dossier_id="reno_s_bdd_session",
             schema_version="1.0.0",
-            created_at=datetime.utcnow(),
-            last_updated_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
+            last_updated_at=datetime.now(UTC),
             origin="fresh",
             current_stage="scope",
         ),

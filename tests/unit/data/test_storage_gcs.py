@@ -9,7 +9,7 @@ branches — plus the invalid-token guards and corrupted-file handling — run.
 import json
 import os
 import tempfile
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 from google.cloud.exceptions import NotFound
@@ -23,8 +23,8 @@ def _dossier(token="reno_s_gcs"):
         envelope=DossierEnvelope(
             dossier_id=token,
             schema_version="1.0.0",
-            created_at=datetime.utcnow(),
-            last_updated_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
+            last_updated_at=datetime.now(UTC),
             origin="fresh",
             current_stage="scope",
         ),

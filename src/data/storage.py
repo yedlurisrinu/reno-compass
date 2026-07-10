@@ -148,7 +148,7 @@ def write_session(session_token: str, dossier: Dossier) -> None:
         raise ValueError("Invalid session token format. Must be prefixed with 'reno_s_'.")
 
     # Update metadata timestamps
-    dossier.envelope.last_updated_at = datetime.utcnow()
+    dossier.envelope.last_updated_at = datetime.now(UTC)
     json_data = dossier.model_dump_json(indent=2)
 
     if _use_local_fallback():
