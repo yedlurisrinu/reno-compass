@@ -1,6 +1,6 @@
 """Unit tests to verify Card metadata contracts for all 8 stage agents."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 
@@ -24,8 +24,8 @@ def mock_dossier() -> Dossier:
         envelope=DossierEnvelope(
             dossier_id="reno_s_stages_test",
             schema_version="1.0.0",
-            created_at=datetime.utcnow(),
-            last_updated_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
+            last_updated_at=datetime.now(UTC),
             origin="fresh",
             current_stage="scope",
         ),

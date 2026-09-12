@@ -4,7 +4,7 @@ This module defines the strict Pydantic v2 schemas representing the complete
 session state contract (dossier.json) along with SemVer checking functions.
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
@@ -119,7 +119,9 @@ class ConversationTurn(BaseModel):
 
     role: Literal["agent", "user"] = Field(..., description="Speaker role.")
     text: str = Field(..., description="Message text.")
-    at: datetime = Field(default_factory=datetime.utcnow, description="Message timestamp.")
+    at: datetime = Field(
+        default_factory=lambda: datetime.now(UTC), description="Message timestamp."
+    )
 
 
 class SectionStatus(BaseModel):
@@ -558,8 +560,8 @@ class DossierEnvelope(BaseModel):
     app_id: str = Field(default="reno-compass")
     schema_version: str = Field(default="1.1.0")
     dossier_id: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    last_updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    last_updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     origin: Literal["fresh", "session_restore"] = Field(default="fresh")
     current_stage: Literal[
         "scope",

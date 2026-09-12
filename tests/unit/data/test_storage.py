@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 import tempfile
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -32,9 +32,9 @@ def _create_test_dossier(
 ) -> Dossier:
     """Helper to generate a mock Dossier object."""
     if not created_at:
-        created_at = datetime.utcnow()
+        created_at = datetime.now(UTC)
     if not last_updated_at:
-        last_updated_at = datetime.utcnow()
+        last_updated_at = datetime.now(UTC)
 
     return Dossier(
         envelope=DossierEnvelope(
@@ -87,7 +87,7 @@ def test_session_read_expired_sliding_ttl():
         data = json.load(f)
 
     # Set last_updated_at back in time (sliding TTL is 72h = 3 days)
-    data["envelope"]["last_updated_at"] = (datetime.utcnow() - timedelta(days=4)).isoformat()
+    data["envelope"]["last_updated_at"] = (datetime.now(UTC) - timedelta(days=4)).isoformat()
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f)
 
@@ -109,8 +109,8 @@ def test_session_read_expired_absolute_ttl():
         data = json.load(f)
 
     # Set created_at back in time (absolute TTL is 30 days)
-    data["envelope"]["created_at"] = (datetime.utcnow() - timedelta(days=31)).isoformat()
-    data["envelope"]["last_updated_at"] = (datetime.utcnow() - timedelta(hours=1)).isoformat()
+    data["envelope"]["created_at"] = (datetime.now(UTC) - timedelta(days=31)).isoformat()
+    data["envelope"]["last_updated_at"] = (datetime.now(UTC) - timedelta(hours=1)).isoformat()
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f)
 

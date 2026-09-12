@@ -1,7 +1,7 @@
 """Unit tests for BaseAgent prompt composition, credentials mock, and retry logic."""
 
 import os
-from datetime import datetime
+from datetime import UTC, datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -50,8 +50,8 @@ def test_dossier() -> Dossier:
         envelope=DossierEnvelope(
             dossier_id="reno_s_base_test",
             schema_version="1.0.0",
-            created_at=datetime.utcnow(),
-            last_updated_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
+            last_updated_at=datetime.now(UTC),
             origin="fresh",
             current_stage="scope",
         ),
@@ -198,16 +198,16 @@ def test_is_trivial_ack_false(text):
 @patch("agents.base.BaseAgent._run_mock_extraction")
 def test_extraction_skipped_on_greeting_turn(mock_mock_ex, mock_live_ex, test_dossier):
     """A trailing bare greeting short-circuits the extraction round-trip entirely."""
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from domain.dossier import ConversationTurn
 
     agent = TestMockAgent(test_dossier)
     scope = test_dossier.project.scope
     scope.conversation = [
-        ConversationTurn(role="user", text="Budget is 40000, zip 95120.", at=datetime.utcnow()),
-        ConversationTurn(role="agent", text="Got it, here is the ballpark.", at=datetime.utcnow()),
-        ConversationTurn(role="user", text="thanks", at=datetime.utcnow()),
+        ConversationTurn(role="user", text="Budget is 40000, zip 95120.", at=datetime.now(UTC)),
+        ConversationTurn(role="agent", text="Got it, here is the ballpark.", at=datetime.now(UTC)),
+        ConversationTurn(role="user", text="thanks", at=datetime.now(UTC)),
     ]
 
     agent.extract_and_update_stage_dossier()
@@ -219,7 +219,7 @@ def test_extraction_skipped_on_greeting_turn(mock_mock_ex, mock_live_ex, test_do
 @patch("agents.base.BaseAgent._run_mock_extraction")
 def test_extraction_runs_on_confirmation_turn(mock_mock_ex, test_dossier, monkeypatch):
     """A confirmation like 'proceed' must still run extraction (capture deliverables)."""
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from domain.dossier import ConversationTurn
 
@@ -227,9 +227,9 @@ def test_extraction_runs_on_confirmation_turn(mock_mock_ex, test_dossier, monkey
     agent = TestMockAgent(test_dossier)
     scope = test_dossier.project.scope
     scope.conversation = [
-        ConversationTurn(role="user", text="Budget is 40000.", at=datetime.utcnow()),
-        ConversationTurn(role="agent", text="Ballpark ready.", at=datetime.utcnow()),
-        ConversationTurn(role="user", text="proceed", at=datetime.utcnow()),
+        ConversationTurn(role="user", text="Budget is 40000.", at=datetime.now(UTC)),
+        ConversationTurn(role="agent", text="Ballpark ready.", at=datetime.now(UTC)),
+        ConversationTurn(role="user", text="proceed", at=datetime.now(UTC)),
     ]
 
     agent.extract_and_update_stage_dossier()
@@ -240,7 +240,7 @@ def test_extraction_runs_on_confirmation_turn(mock_mock_ex, test_dossier, monkey
 @patch("agents.base.BaseAgent._run_mock_extraction")
 def test_extraction_runs_on_substantive_turn(mock_mock_ex, test_dossier, monkeypatch):
     """C: a parameter-bearing latest turn still triggers extraction."""
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from domain.dossier import ConversationTurn
 
@@ -248,7 +248,7 @@ def test_extraction_runs_on_substantive_turn(mock_mock_ex, test_dossier, monkeyp
     agent = TestMockAgent(test_dossier)
     scope = test_dossier.project.scope
     scope.conversation = [
-        ConversationTurn(role="user", text="Budget is 40000, zip 95120.", at=datetime.utcnow()),
+        ConversationTurn(role="user", text="Budget is 40000, zip 95120.", at=datetime.now(UTC)),
     ]
 
     agent.extract_and_update_stage_dossier()
@@ -349,7 +349,7 @@ def test_scrub_preserves_ordinary_text():
 
 
 def _logistics_dossier():
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from domain.dossier import (
         ConversationTurn,
@@ -365,7 +365,7 @@ def _logistics_dossier():
             ConversationTurn(
                 role="user",
                 text="We have a second bathroom so we can live through the remodel.",
-                at=datetime.utcnow(),
+                at=datetime.now(UTC),
             )
         ],
     )
@@ -420,7 +420,7 @@ def test_extraction_omitting_disruption_preserves_prior_value(monkeypatch):
 
 
 def _safety_dossier():
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from domain.dossier import (
         ConversationTurn,
@@ -434,7 +434,7 @@ def _safety_dossier():
         status=SectionStatus(state="in_progress"),
         classifications=[],
         conversation=[
-            ConversationTurn(role="user", text="I'll paint myself.", at=datetime.utcnow())
+            ConversationTurn(role="user", text="I'll paint myself.", at=datetime.now(UTC))
         ],
     )
     return Dossier(
@@ -520,7 +520,7 @@ def test_live_extraction_failure_does_not_fabricate_mock(monkeypatch):
 
 
 def _design_dossier():
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from domain.dossier import (
         ConversationTurn,
@@ -570,7 +570,7 @@ def _design_dossier():
             ),
         ],
         conversation=[
-            ConversationTurn(role="user", text="Go with Preferred.", at=datetime.utcnow())
+            ConversationTurn(role="user", text="Go with Preferred.", at=datetime.now(UTC))
         ],
     )
     return Dossier(
@@ -788,7 +788,7 @@ def test_live_extraction_survives_poison_field_and_populates_scope(monkeypatch):
     monkeypatch.setenv("MOCK_VERTEX_AI", "false")
 
     # A fresh scope in its sentinel-default state, exactly as mid-conversation.
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from domain.dossier import ConversationTurn, SectionStatus
 
@@ -816,7 +816,7 @@ def test_live_extraction_survives_poison_field_and_populates_scope(monkeypatch):
         ),
         budget_reality_check=BudgetRealityCheck(stated_vs_ballpark="plausible", note="init"),
         conversation=[
-            ConversationTurn(role="user", text="35K to 45K, 95120, 10x5", at=datetime.utcnow())
+            ConversationTurn(role="user", text="35K to 45K, 95120, 10x5", at=datetime.now(UTC))
         ],
     )
     dossier = Dossier(
@@ -894,7 +894,7 @@ def test_merge_partial_nested_submodel_does_not_corrupt_dossier():
 
 def _safety_with_tier1(consent_a=None, consent_b=None, reclassified_a=False, ack_turn=True):
     """A safety stage with two Tier-1 items + optional user acknowledgement turn."""
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from domain.dossier import (
         ConversationTurn,
@@ -911,7 +911,7 @@ def _safety_with_tier1(consent_a=None, consent_b=None, reclassified_a=False, ack
             ConversationTurn(
                 role="user",
                 text="Yes I acknowledge the professional only Tier-1 item",
-                at=datetime.utcnow(),
+                at=datetime.now(UTC),
             )
         )
     saf = SafetyPermitStage(

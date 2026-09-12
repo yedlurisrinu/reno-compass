@@ -12,8 +12,8 @@ def test_scope_stated_parameter_role_filtering(monkeypatch):
         envelope=DossierEnvelope(
             dossier_id="test_filter",
             schema_version="1.0.0",
-            created_at=datetime.datetime.utcnow(),
-            last_updated_at=datetime.datetime.utcnow(),
+            created_at=datetime.datetime.now(datetime.UTC),
+            last_updated_at=datetime.datetime.now(datetime.UTC),
             origin="fresh",
             current_stage="scope",
         ),
@@ -29,12 +29,12 @@ def test_scope_stated_parameter_role_filtering(monkeypatch):
         ConversationTurn(
             role="agent",
             text="A standard ballpark bathroom remodel budget is $20000 and zipcode is 94043.",
-            at=datetime.datetime.utcnow(),
+            at=datetime.datetime.now(datetime.UTC),
         ),
         ConversationTurn(
             role="user",
             text="Actually, my zipcode is 95120 and my budget target is $15000.",
-            at=datetime.datetime.utcnow(),
+            at=datetime.datetime.now(datetime.UTC),
         ),
     ]
 

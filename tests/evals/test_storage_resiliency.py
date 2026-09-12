@@ -19,8 +19,8 @@ def test_storage_gcs_fallback_resiliency(monkeypatch):
         envelope=DossierEnvelope(
             dossier_id=token,
             schema_version="1.0.0",
-            created_at=datetime.datetime.utcnow(),
-            last_updated_at=datetime.datetime.utcnow(),
+            created_at=datetime.datetime.now(datetime.UTC),
+            last_updated_at=datetime.datetime.now(datetime.UTC),
             origin="fresh",
             current_stage="scope",
         ),

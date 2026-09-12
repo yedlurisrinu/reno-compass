@@ -5,7 +5,7 @@ guard conditions, backward invalidation cascades (E1..E4), design pass caps,
 and restore/re-walk workflows for the Reno Compass application.
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 from config.config import is_project_type_supported
 from domain.dossier import Dossier
@@ -310,7 +310,7 @@ def populate_synthesis(dossier: Dossier) -> None:
 
     # H9: record that the deliverable PDF is available (bytes rendered on download).
     synthesis.pdf_ref = "reno_compass_blueprint.pdf"
-    synthesis.generated_at = datetime.utcnow()
+    synthesis.generated_at = datetime.now(UTC)
 
     project.synthesis = synthesis
 
@@ -544,7 +544,7 @@ def advance_pipeline(dossier: Dossier) -> bool:
     stage_obj = getattr(project, current, None)
     if stage_obj:
         stage_obj.status.state = "completed"
-        stage_obj.status.confirmed_at = datetime.utcnow()
+        stage_obj.status.confirmed_at = datetime.now(UTC)
 
     # 4. Advance to next key
     next_stage = get_next_stage_key(dossier, current)

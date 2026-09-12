@@ -4,7 +4,7 @@ import json
 import logging
 import time
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -84,9 +84,7 @@ class TelemetryLoggingMiddleware(BaseHTTPMiddleware):
                     "event": "RATE_LIMIT_EXCEEDED",
                     "client": session_cookie,
                     "path": request.url.path,
-                    "timestamp": datetime.utcnow().isoformat()
-                    if hasattr(datetime, "utcnow")
-                    else time.time(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 }
                 logger.warning(json.dumps(log_payload))
                 return JSONResponse(
